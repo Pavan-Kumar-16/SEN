@@ -20,14 +20,22 @@ import BlurText from "./components/BlurText"
 import { EmailVerification } from "./components/EmailVerification"
 import RotatingText from "./components/RotatingText"
 import { DownloadIcon, Smartphone } from "lucide-react"
+import Banner from './components/Banner'
+import CTAButton from './components/CTAButton'
+import { useFeatureFlagVariantKey } from 'posthog-js/react'
 
 export default function SenipyHomePage() {
+    // You can randomize or control this
+  const ctaVariant: "A" | "B" = "B"
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [authDialog, setAuthDialog] = useState<"signin" | "signup" | null>(null)
   const [activeGame, setActiveGame] = useState<string | null>(null)
   const [showOrbDialog, setShowOrbDialog] = useState(false)
   const [showEmailVerification, setShowEmailVerification] = useState(false)
   const [userEmail, setUserEmail] = useState("")
+const variant = useFeatureFlagVariantKey('banner-variant') as "A" | "B"
+
+
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
@@ -36,6 +44,7 @@ export default function SenipyHomePage() {
     }
     setIsMenuOpen(false)
   }
+  
 
   const handleAuth = (type: "signin" | "signup", formData: FormData) => {
     const email = formData.get("email") as string
@@ -75,9 +84,23 @@ export default function SenipyHomePage() {
   const handleAnimationComplete = () => {
     console.log("BlurText animation completed!")
   }
+  const [bannerVariant] = useState<"A" | "B">(() =>
+    Math.random() < 0.5 ? "A" : "B"
+  )
 
   return (
+    <>
+      <Banner variant={bannerVariant} />
+      {/* Other content */}
+      <div className="mt-6">
+        <CTAButton />
+      </div>
+    </>
+  )
+  return (
+    
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+       
       {/* New Dynamic Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         {/* Animated Mesh Gradient */}
@@ -113,6 +136,8 @@ export default function SenipyHomePage() {
           className="absolute bottom-1/4 right-1/3 w-14 h-14 border border-green-400/15 rounded-lg rotate-45 animate-spin"
           style={{ animationDuration: "15s", animationDelay: "2s" }}
         ></div>
+        
+        
 
         {/* Constellation Lines */}
         <svg className="absolute inset-0 w-full h-full opacity-10" viewBox="0 0 1200 800">
@@ -192,7 +217,7 @@ export default function SenipyHomePage() {
             </path>
           </svg>
         </div>
-
+            
         {/* Glowing Particles */}
         <div className="absolute top-1/6 left-1/5 w-1 h-1 bg-blue-400 rounded-full animate-ping opacity-60"></div>
         <div
@@ -305,7 +330,7 @@ export default function SenipyHomePage() {
                 </DialogContent>
               </Dialog>
 
-              <Dialog open={authDialog === "signin"} onOpenChange={(open) => !open && setAuthDialog(null)}>
+              <Dialog open={authDialog === "signin"} onOpenChange={(open:  boolean) => !open && setAuthDialog(null)}>
                 <DialogTrigger asChild>
                   <button
                     onClick={() => setAuthDialog("signin")}
@@ -363,7 +388,7 @@ export default function SenipyHomePage() {
                 </DialogContent>
               </Dialog>
 
-              <Dialog open={authDialog === "signup"} onOpenChange={(open) => !open && setAuthDialog(null)}>
+              <Dialog open={authDialog === "signup"} onOpenChange={(open: boolean) => !open && setAuthDialog(null)}>
                 <DialogTrigger asChild>
                   <Button
                     onClick={() => setAuthDialog("signup")}
@@ -646,10 +671,6 @@ export default function SenipyHomePage() {
               mainClassName="px-4 sm:px-6 md:px-8 bg-gradient-to-r from-cyan-500 to-blue-500 text-white overflow-hidden py-2 sm:py-3 md:py-4 justify-center rounded-lg text-xl sm:text-2xl md:text-3xl font-bold"
               staggerFrom="last"
               initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "-120%" }}
-              staggerDuration={0.025}
-              splitLevelClassName="overflow-hidden pb-1 sm:pb-2 md:pb-2"
               animate={{ y: 0 }}
               exit={{ y: "-120%" }}
               staggerDuration={0.025}
